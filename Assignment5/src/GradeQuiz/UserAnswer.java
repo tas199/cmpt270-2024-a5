@@ -36,7 +36,7 @@ public class UserAnswer
             System.out.println("Error: answer attribute not match with the input argument");
         }
 
-        System.out.println(test);
+        //System.out.println(test);
     }
 
 

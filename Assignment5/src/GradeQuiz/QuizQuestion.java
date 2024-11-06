@@ -42,7 +42,7 @@ public class QuizQuestion {
         {
             quizQuestionString += choices[i] + "\n";
         }
-        quizQuestionString += "Answer:" + this.answer + "\n";
+        //quizQuestionString += "Answer:" + this.answer + "\n";
         return quizQuestionString;
 
     }
@@ -65,10 +65,10 @@ public class QuizQuestion {
 
         if (test.getAnswer() != 1)
         {
-            System.out.println("Error: answer attribute not match with the input argument");
+            System.out.println("");
         }
 
-        System.out.println(test.toString());
+        //System.out.println(test.toString());
 
 
     }

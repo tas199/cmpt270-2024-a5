@@ -43,6 +43,7 @@ public class QuizMain
     {
         // catching null
         return this.questionList.get(questionNumber);
+
     }
 
     public int getQuizAnswer(int questionNumber)
@@ -89,36 +90,7 @@ public class QuizMain
         return quizString;
     }
 
-    /*
-    public UserAnswer getUserAnswer(int questionNumber)
-    {
-        return this.userAnswerList.get(questionNumber);
 
-    }
-
-    public int getScore()
-    {
-        return this.score;
-
-    }
-
-    public int getQuestionTotal()
-    {
-        return this.questionList.size();
-    }
-
-    public int[] getUserAnswer()
-    {
-        return this
-
-    }
-
-    public String toString()
-    {
-        return "";
-    }
-
-    */
     public static void main(String[] args)
     {
         String[] choiceTest = {"1. Fire", "2. Water", "3. Earth", "4. Wind"};
@@ -157,9 +129,7 @@ public class QuizMain
             System.out.println("Error getScore(): incorrect score result");
         }
 
-
-
-        System.out.println(test.toString());
+        //System.out.println(test.toString());
 
 
     }
