@@ -56,6 +56,12 @@ public class QuizMain
     public int getQuestionTotal()
     {
         return this.questionList.size();
+
+    }
+
+    public boolean isCorrect(int questionNumber)
+    {
+        return getQuizAnswer(questionNumber) == getUserAnswer(questionNumber);
     }
 
     /*
@@ -102,14 +108,19 @@ public class QuizMain
 
         if (test.getQuizAnswer(0) != 1)
         {
-            System.out.println("Error getQuizAnswer(): incorrect return number");
+            System.out.println("Error getQuizAnswer(): incorrect returned number");
 
         }
 
         if (test.getUserAnswer(0) != 1)
         {
-            System.out.println("Error getUserAnswer(): incorrect return number");
+            System.out.println("Error getUserAnswer(): incorrect returned number");
 
+        }
+
+        if (!test.isCorrect(0))
+        {
+            System.out.println("Error isCorrect(): incorrect boolean result");
         }
 
 
