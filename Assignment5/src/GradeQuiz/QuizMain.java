@@ -6,7 +6,7 @@ Course: CMPT270-03
 */
 
 
-package Quiz;
+package GradeQuiz;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +15,12 @@ public class QuizMain
 {
     private List<QuizQuestion> questionList;
     private List<UserAnswer> userAnswerList;
-    private int questionIdx;
     private int score;
 
     public QuizMain()
     {
         this.questionList = new ArrayList<QuizQuestion>();
         this.userAnswerList = new ArrayList<UserAnswer>();
-        this.questionIdx = 0;
         this.score = 0;
 
 
@@ -32,7 +30,6 @@ public class QuizMain
     {
         this.questionList.add(new QuizQuestion(question, choices, quiznAnswer));
         this.userAnswerList.add(new UserAnswer(userAnswer));
-        this.questionIdx++;
         if (quiznAnswer == userAnswer)
         {
             this.score++;
@@ -64,9 +61,14 @@ public class QuizMain
 
     }
 
-    public boolean isCorrect(int questionNumber)
+    public String isCorrect(int questionNumber)
     {
-        return this.getQuizAnswer(questionNumber) == this.getUserAnswer(questionNumber);
+        if (getQuizAnswer(questionNumber) == getUserAnswer(questionNumber))
+        {
+            return "Correct";
+        }
+        return "Wrong";
+
     }
 
     public int getScore()
@@ -75,17 +77,21 @@ public class QuizMain
 
     }
 
+    @Override
     public String toString()
     {
         String quizString;
+        float result;
+        result = (float) getScore() / getQuizTotal() * 100;
 
         quizString = "";
 
-        for (int i = 0; i < this.getQuizTotal(); i++)
+        for (int i = 0; i < getQuizTotal(); i++)
         {
-            quizString += "Question " + (i+1) + ": " + this.isCorrect(i) + "\n";
+            quizString += "Question " + (i+1) + ": " + isCorrect(i) + "\n";
         }
-        quizString += "Score: " + this.getScore() + "/" + this.getQuizTotal() + "\n";
+        quizString += "Score: " + getScore() + "/" + getQuizTotal()
+        + " (" + result + "%)" + "\n";
 
         return quizString;
     }
@@ -116,7 +122,7 @@ public class QuizMain
 
         }
 
-        if (!test.isCorrect(0))
+        if (test.isCorrect(0).equals("Wrong"))
         {
             System.out.println("Error isCorrect(): incorrect boolean result");
         }
