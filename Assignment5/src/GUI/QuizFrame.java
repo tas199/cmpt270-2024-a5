@@ -20,8 +20,7 @@ import java.util.EmptyStackException;
 import java.util.List;
 
 
-public class QuizFrame extends JFrame
-{
+public class QuizFrame extends JFrame {
     QuizFileReader reader;
     List<QuizQuestion> quizDisplay;
     QuizMain scoreCollect = new QuizMain();
@@ -37,9 +36,9 @@ public class QuizFrame extends JFrame
     private JButton choiceButton4;
 
     private JLabel gradeQuiz;
+    private int i;
 
-    public QuizFrame()
-    {
+    public QuizFrame() {
         this.reader = new QuizFileReader();
         this.quizDisplay = new ArrayList<>();
         this.scoreCollect = new QuizMain();
@@ -47,7 +46,8 @@ public class QuizFrame extends JFrame
         String question;
         String[] choice;
         int answer;
-        int i;
+        this.i = 0;
+        String finalScore;
 
         quizPanel = new JPanel();
 
@@ -56,38 +56,38 @@ public class QuizFrame extends JFrame
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         filepath = "Assignment5/src/input.txt";
-        try
-        {
+        try {
             quizDisplay = reader.readQuiz(filepath);
 
-        } catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             System.out.println("The file not found");
         }
-
-        i = 0;
-        question = quizDisplay.get(i).getQuestion();
-        choice = quizDisplay.get(i).getChoice();
-        answer = quizDisplay.get(i).getAnswer();
 
         GridLayout layout = new GridLayout(8, 2);
         this.quizPanel.setSize(500, 700);
         layout.setHgap(10);
         this.quizPanel.setLayout(layout);
+        this.quizPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
 
-        this.questionNumber = new JLabel("Question #" + (i+1) + ":");
-        this.questionText = new JLabel(question);
-        this.choiceButton1 = new JButton(choice[0]);
-        this.choiceButton2 = new JButton(choice[1]);
-        this.choiceButton3 = new JButton(choice[2]);
-        this.choiceButton4 = new JButton(choice[3]);
-        this.gradeQuiz = new JLabel(this.scoreCollect.toString());
+        question = quizDisplay.get(i).getQuestion();
+        choice = quizDisplay.get(i).getChoice();
+        answer = quizDisplay.get(i).getAnswer();
+        finalScore = scoreCollect.toString();
 
-        //this.choiceButton1.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 1));
-        //this.choiceButton2.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 2));
-        //this.choiceButton3.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 3));
-        //this.choiceButton4.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 4));
+
+        this.questionNumber = new JLabel();
+        this.questionText = new JLabel();
+        this.choiceButton1 = new JButton();
+        this.choiceButton2 = new JButton();
+        this.choiceButton3 = new JButton();
+        this.choiceButton4 = new JButton();
+        this.gradeQuiz = new JLabel();
+
+        choiceButton1.addActionListener(new ChoiceBottonListener(1));
+        choiceButton2.addActionListener(new ChoiceBottonListener(2));
+        choiceButton3.addActionListener(new ChoiceBottonListener(3));
+        choiceButton4.addActionListener(new ChoiceBottonListener(4));
 
 
 
@@ -98,22 +98,98 @@ public class QuizFrame extends JFrame
         this.quizPanel.add(this.choiceButton2);
         this.quizPanel.add(this.choiceButton3);
         this.quizPanel.add(this.choiceButton4);
+        this.quizPanel.add(this.gradeQuiz);
 
-        this.quizPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+
+
+
         this.setContentPane(this.quizPanel);
 
 
-
-
         this.setResizable(false);
+        if(!quizDisplay.isEmpty()) {
+            QuizQuestion q = quizDisplay.get(i);
+            updateDisplay(q);
+        }
+
+
         this.setVisible(true);
 
-        }
 
-        public static void main(String[] args)
+
+
+    }
+
+    private void updateDisplay(QuizQuestion q)
+    {
+        String question;
+        String[] choice;
+        int answer;
+        question = this.quizDisplay.get(i).getQuestion();
+        choice = quizDisplay.get(i).getChoice();
+        answer = quizDisplay.get(i).getAnswer();
+
+        this.questionNumber.setText("Question #" + (this.i+1) + ":");
+        this.questionText.setText(question);
+        this.choiceButton1.setText(choice[0]);
+        this.choiceButton2.setText(choice[1]);
+        this.choiceButton3.setText(choice[2]);
+        this.choiceButton4.setText(choice[3]);
+
+        gradeQuiz.setText("");
+
+    }
+
+
+
+    private class ChoiceBottonListener implements ActionListener
+    {
+        private final int choiceIdx;
+
+        public ChoiceBottonListener(int idx)
         {
-            QuizFrame fram = new QuizFrame();
+            this.choiceIdx = idx;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            String question;
+            String[] choice;
+            int answer;
+            question = quizDisplay.get(i).getQuestion();
+            choice = quizDisplay.get(i).getChoice();
+            answer = quizDisplay.get(i).getAnswer();
+            scoreCollect.addQuestion(question, choice, answer, choiceIdx);
+            i++;
+            if (i < quizDisplay.size())
+            {
+                updateDisplay(quizDisplay.get(i));
+
+            }
+            else
+            {
+                float finalScorePercent = (float) scoreCollect.getScore() / scoreCollect.getQuizTotal();
+                gradeQuiz.setText("Total Score "+ scoreCollect.getScore() + "/" + scoreCollect.getQuizTotal() +
+                        " (" + finalScorePercent + "%)");
+            }
+
 
         }
+    }
+
+    public static void main(String[] args)
+    {
+        QuizFrame frame = new QuizFrame();
+
+    }
+
 
 }
+/*
+        this.choiceButton1.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 1));
+        this.choiceButton2.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 2));
+        this.choiceButton3.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 3));
+        this.choiceButton4.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 4));
+*/
