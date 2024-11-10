@@ -4,7 +4,6 @@ NSID: tas199
 Student Course: 11175553
 Course: CMPT270-03
 */
-
 package Quiz;
 
 public class Question
@@ -26,9 +25,9 @@ public class Question
 
     /**
      * class construction that included complete form question
-     * @param question      a question information
+     * @param question      a question description
      * @param choices       answer choices for the question
-     * @param answer        the answer number of the question
+     * @param answer        the answer integer of the question
      */
     public Question(String question, String[] choices, int answer)
     {
@@ -45,8 +44,8 @@ public class Question
     public String getQuestion()
     {
         return question;
-    }
 
+    }
 
     /**
      * getter of answer choices information
@@ -65,6 +64,7 @@ public class Question
     public int getChoiceSize()
     {
         return choices.length;
+
     }
 
     /**
@@ -97,6 +97,7 @@ public class Question
 
     }
 
+    /* regression tests */
     public static void main(String[] args)
     {
         String[] choiceTest = {"AAAAA", "BBBBB", "CCCCC", "DDDDD"};
@@ -118,8 +119,8 @@ public class Question
             System.out.println("Error: answer  attribute not match with the input argument");
         }
 
-        //System.out.println(test.toString());
-
+        //System.out.println(test());
 
     }
+
 }
