@@ -2,7 +2,6 @@ package GradeQuiz;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,7 +25,6 @@ public class QuizFileReader
 
         question = "";
         choice = null;
-
 
 
         filePath = filepath;
@@ -67,7 +65,8 @@ public class QuizFileReader
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         List<QuizQuestion> test = new ArrayList<>();
         QuizFileReader reader = new QuizFileReader();
         String testPrint = "";
@@ -83,12 +82,21 @@ public class QuizFileReader
             System.out.println("File not found.");
         }
 
+        if (test.size() != 10)
+        {
+            System.out.println("Wrong size number of the array list.");
+        }
 
+
+    /*
         for (int i = 0; i < test.size(); i++)
         {
-            testPrint += test.get(i).toString() + "\n";
+            testPrint += test.get(i) + "\n";
         }
         System.out.println(testPrint);
+
+     */
+
 
 
     }
