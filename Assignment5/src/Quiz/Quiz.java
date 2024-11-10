@@ -20,11 +20,6 @@ public class Quiz {
     private ArrayList<Integer> userAnswerList;
 
     /**
-     * total user score of the quiz
-     */
-    private int userScore;
-
-    /**
      * initialization of arraylist question, and user answers
      */
     public Quiz()
@@ -105,7 +100,8 @@ public class Quiz {
      */
     public int getScore()
     {
-        this.userScore = 0;
+        int userScore;
+        userScore = 0;
 
         if (this.questionList.size() != this.userAnswerList.size())
         {
@@ -116,10 +112,10 @@ public class Quiz {
         {
             if (getUserAnswer(i) == getQuestion(i).getAnswer())
             {
-                this.userScore += 1;
+                userScore++;
             }
         }
-        return this.userScore;
+        return userScore;
     }
 
     /**
