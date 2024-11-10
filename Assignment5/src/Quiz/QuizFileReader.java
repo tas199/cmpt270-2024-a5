@@ -1,33 +1,56 @@
-package GradeQuiz;
+/*
+Name: Sojisirikul, Tanakan
+NSID: tas199
+Student Course: 11175553
+Course: CMPT270-03
+*/
+package Quiz;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class work is followed CMPT270 Assignment4 AchievementFileReader.java
+ */
 public class QuizFileReader
 {
+    /**
+     * the file path where question read from
+     */
     private String filePath;
+
+    /**
+     * a file object at the location by filePath
+     */
     private File myObj;
 
+    /**
+     * constructor, initialize filepath to empty string
+     */
     public QuizFileReader()
     {
         this.filePath = "";
     }
 
-    public List<QuizQuestion> readQuiz(String filepath) throws FileNotFoundException
+    /**
+     * reads question from a txt file at the argument filepath
+     * @param filePathStr file path to txt file where questions stored
+     * @return a newly created Quiz object with all questions stored
+     * @throws FileNotFoundException if the file location does not exist
+     */
+    public Quiz readQuiz(String filePathStr) throws FileNotFoundException
     {
-        List<QuizQuestion> questionAll = new ArrayList<>();
+        Quiz questionAll = new Quiz();
         String question;
         String[] choice;
         int answer;
 
         question = "";
         choice = null;
+        answer = 0;
 
-
-        filePath = filepath;
+        filePath = filePathStr;
         Scanner sc = null;
         try
         {
@@ -38,20 +61,24 @@ public class QuizFileReader
             {
                 question = sc.nextLine().trim();
 
-                if (sc.hasNextLine()) {
-                    String choiceStr = sc.nextLine().trim();
-                    choice = choiceStr.split(",");
-                    for (int i = 0; i < choice.length; i++) {
+                if (sc.hasNextLine())
+                {
+                    String choiceS = sc.nextLine().trim();
+                    choice = choiceS.split(",");
+                    for (int i = 0; i < choice.length; i++)
+                    {
                         choice[i] = choice[i].trim();
-                    }
-                }
 
-                answer = 0;
-                if (sc.hasNextLine()) {
+                    }
+
+                }
+                if (sc.hasNextLine())
+                {
                     String answerStr = sc.nextLine().trim();
                     answer = Integer.parseInt(answerStr.trim());
+
                 }
-                questionAll.add(new QuizQuestion(question, choice, answer));
+                questionAll.addQuestion(question, choice, answer);
 
             }
 
@@ -59,7 +86,10 @@ public class QuizFileReader
         finally
         {
             if (sc != null)
+            {
                 sc.close();
+
+            }
         }
         return questionAll;
 
@@ -67,7 +97,7 @@ public class QuizFileReader
 
     public static void main(String[] args)
     {
-        List<QuizQuestion> test = new ArrayList<>();
+        Quiz test = new Quiz();
         QuizFileReader reader = new QuizFileReader();
         String testPrint = "";
 
@@ -82,20 +112,25 @@ public class QuizFileReader
             System.out.println("File not found.");
         }
 
-        if (test.size() != 10)
+        if (test.getQuizTotal() != 10)
         {
             System.out.println("Wrong size number of the array list.");
         }
 
 
-    /*
-        for (int i = 0; i < test.size(); i++)
+
+
+        /*
+        for (int i = 0; i < test.getQuizTotal(); i++)
         {
-            testPrint += test.get(i) + "\n";
+            testPrint += test.getQuestion(i) + "\n";
         }
         System.out.println(testPrint);
 
-     */
+        */
+
+
+
 
 
 
