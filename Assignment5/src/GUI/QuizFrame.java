@@ -1,30 +1,32 @@
+/*
+Name: Sojisirikul, Tanakan
+NSID: tas199
+Student Course: 11175553
+Course: CMPT270-03
+*/
 package GUI;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-//import javax.swing.border.Border.*;
 
 
-import GradeQuiz.QuizQuestion;
-import GradeQuiz.QuizFileReader;
-import GradeQuiz.QuizMain;
+import Quiz.Question;
+import Quiz.QuizFileReader;
+import Quiz.Quiz;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.List;
+
+import java.io.FileNotFoundException;
 
 
-public class QuizFrame extends JFrame {
-    QuizFileReader reader;
-    List<QuizQuestion> quizDisplay;
-    QuizMain scoreCollect = new QuizMain();
-
+public class QuizFrame extends JFrame
+{
+    private Quiz quiz;
+    private int idx;
     private JPanel quizPanel;
 
     private JLabel questionNumber;
@@ -36,20 +38,11 @@ public class QuizFrame extends JFrame {
     private JButton choiceButton4;
 
     private JLabel gradeQuiz;
-    private int i;
 
     public QuizFrame() {
-        this.reader = new QuizFileReader();
-        this.quizDisplay = new ArrayList<>();
-        this.scoreCollect = new QuizMain();
+        QuizFileReader reader = new QuizFileReader();
+        this.quiz = new Quiz();
         String filepath;
-        String question;
-        String[] choice;
-        int answer;
-        this.i = 0;
-        String finalScore;
-
-        quizPanel = new JPanel();
 
         this.setTitle("Quiz - Avatar: The Last Airbender");
         this.setSize(500, 350);
@@ -57,24 +50,18 @@ public class QuizFrame extends JFrame {
 
         filepath = "Assignment5/src/input.txt";
         try {
-            quizDisplay = reader.readQuiz(filepath);
+            this.quiz = reader.readQuiz(filepath);
 
         } catch (FileNotFoundException e) {
             System.out.println("The file not found");
         }
 
-        GridLayout layout = new GridLayout(8, 2);
+        this.quizPanel = new JPanel();
         this.quizPanel.setSize(500, 700);
+        GridLayout layout = new GridLayout(7,1);
         layout.setHgap(10);
         this.quizPanel.setLayout(layout);
         this.quizPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-
-
-        question = quizDisplay.get(i).getQuestion();
-        choice = quizDisplay.get(i).getChoice();
-        answer = quizDisplay.get(i).getAnswer();
-        finalScore = scoreCollect.toString();
-
 
         this.questionNumber = new JLabel();
         this.questionText = new JLabel();
@@ -82,12 +69,14 @@ public class QuizFrame extends JFrame {
         this.choiceButton2 = new JButton();
         this.choiceButton3 = new JButton();
         this.choiceButton4 = new JButton();
-        this.gradeQuiz = new JLabel();
 
-        choiceButton1.addActionListener(new ChoiceBottonListener(1));
-        choiceButton2.addActionListener(new ChoiceBottonListener(2));
-        choiceButton3.addActionListener(new ChoiceBottonListener(3));
-        choiceButton4.addActionListener(new ChoiceBottonListener(4));
+        this.gradeQuiz = new JLabel();
+        this.gradeQuiz.setVisible(false);
+
+        choiceButton1.addActionListener(new ChoiceButtonListener(1));
+        choiceButton2.addActionListener(new ChoiceButtonListener(2));
+        choiceButton3.addActionListener(new ChoiceButtonListener(3));
+        choiceButton4.addActionListener(new ChoiceButtonListener(4));
 
 
 
@@ -100,18 +89,13 @@ public class QuizFrame extends JFrame {
         this.quizPanel.add(this.choiceButton4);
         this.quizPanel.add(this.gradeQuiz);
 
-
-
-
-
         this.setContentPane(this.quizPanel);
-
-
         this.setResizable(false);
-        if(!quizDisplay.isEmpty()) {
-            QuizQuestion q = quizDisplay.get(i);
-            updateDisplay(q);
-        }
+
+        this.idx = 0;
+        Question q = this.quiz.getQuestion(this.idx);
+        quizDisplay(q);
+
 
 
         this.setVisible(true);
@@ -121,58 +105,62 @@ public class QuizFrame extends JFrame {
 
     }
 
-    private void updateDisplay(QuizQuestion q)
+    private void quizDisplay(Question q)
     {
         String question;
         String[] choice;
         int answer;
-        question = this.quizDisplay.get(i).getQuestion();
-        choice = quizDisplay.get(i).getChoice();
-        answer = quizDisplay.get(i).getAnswer();
+        question = q.getQuestion();
+        choice = q.getChoice();
 
-        this.questionNumber.setText("Question #" + (this.i+1) + ":");
+        this.questionNumber.setText("Question #" + (this.idx+1) + ":");
         this.questionText.setText(question);
         this.choiceButton1.setText(choice[0]);
         this.choiceButton2.setText(choice[1]);
         this.choiceButton3.setText(choice[2]);
         this.choiceButton4.setText(choice[3]);
 
-        gradeQuiz.setText("");
+        gradeQuiz.setVisible(false);
 
     }
 
 
 
-    private class ChoiceBottonListener implements ActionListener
+    private class ChoiceButtonListener implements ActionListener
     {
-        private final int choiceIdx;
+        private final int userAnswer;
 
-        public ChoiceBottonListener(int idx)
+        public ChoiceButtonListener(int answer)
         {
-            this.choiceIdx = idx;
+            this.userAnswer = answer;
         }
 
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            String question;
-            String[] choice;
-            int answer;
-            question = quizDisplay.get(i).getQuestion();
-            choice = quizDisplay.get(i).getChoice();
-            answer = quizDisplay.get(i).getAnswer();
-            scoreCollect.addQuestion(question, choice, answer, choiceIdx);
-            i++;
-            if (i < quizDisplay.size())
-            {
-                updateDisplay(quizDisplay.get(i));
 
+            quiz.addUserAnswer(this.userAnswer);
+            idx++;
+            if (idx < quiz.getQuizTotal())
+            {
+                quizDisplay(quiz.getQuestion(idx));
             }
             else
             {
-                float finalScorePercent = (float) scoreCollect.getScore() / scoreCollect.getQuizTotal();
-                gradeQuiz.setText("Total Score "+ scoreCollect.getScore() + "/" + scoreCollect.getQuizTotal() +
-                        " (" + finalScorePercent + "%)");
+                questionNumber.setVisible(false);
+                questionText.setVisible(false);
+                choiceButton1.setVisible(false);
+                choiceButton2.setVisible(false);
+                choiceButton3.setVisible(false);
+                choiceButton4.setVisible(false);
+
+                String quizStr = "<html>" + quiz.toString().replace("\n", "<br>") + "</html>";
+                gradeQuiz.setText(quizStr);
+                gradeQuiz.setVisible(true);
+
+
+
+
             }
 
 
@@ -187,9 +175,3 @@ public class QuizFrame extends JFrame {
 
 
 }
-/*
-        this.choiceButton1.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 1));
-        this.choiceButton2.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 2));
-        this.choiceButton3.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 3));
-        this.choiceButton4.addActionListener(this.scoreCollect.addQuestion(question, choice, answer, 4));
-*/
